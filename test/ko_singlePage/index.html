@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>singlePage</title>
+    <script src="../../knockout-3.4.0.js"></script>
+
+
+</head>
+<body>
+<div class="wrapper" data-bind="component: 'name-register'">
+    <name-register></name-register>
+</div>
+
+<script>
+
+    ko.components.register('name-register',{
+        template : { require: 'templates/home_page.html' },
+        viewModel: function(){
+            this.name = ko.observable('drasho')
+        }
+    });
+    ko.applyBindings();
+</script>
+
+</body>
+</html>

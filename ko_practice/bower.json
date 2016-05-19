@@ -1,0 +1,22 @@
+{
+  "name": "ko_practice",
+  "authors": [
+    "Dragomir89 <drashoo@abv.bg>"
+  ],
+  "description": "practice",
+  "main": "",
+  "license": "MIT",
+  "homepage": "",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "knockout": "^3.4.0",
+    "jquery": "^2.2.3",
+    "bootstrap": "^3.3.6"
+  }
+}

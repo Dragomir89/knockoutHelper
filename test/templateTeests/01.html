@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="../../knockout-3.4.0.js"></script>
+    <style>
+        .wrapper{
+            padding: 5px;
+            margin : 5px;
+            border : 1px solid #00b3ee;
+            width: 400px;
+            margin: 0 auto;
+        }
+        .addressContent{
+            margin-top: 10px;
+            margin-bottom: 15px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="wrapper">
+    Name: <span data-bind="text:name"></span><hr>
+    <div>
+        Residence address:
+        <div data-bind="template: {name: 'addressTemplate', data: residenceAddress}"></div>
+    </div>
+    <hr>
+    <div>
+        Office address:
+        <div data-bind="template: {name: 'addressTemplate', data: officeAddress, if:(officeAddress != null)}"></div>
+    </div>
+
+</div>
+
+
+<script type="text/html" id="addressTemplate">
+    <div class="addressContent">
+        <strong>Street:</strong> <span data-bind="text: street"></span><br>
+        <strong>Number:</strong> <span data-bind="text: number"></span><br>
+        <strong>City:  </strong> <span data-bind="text: city"></span><br>
+    </div>
+</script>
+
+
+
+<script>
+
+    function Address(street, city, number){
+        this.street = street;
+        this.city   = city;
+        this.number  = number;
+    }
+
+    function PersonViewModel(){
+        this.name = ko.observable("drasho");
+        this.residenceAddress = new Address('Tzvetna gradina', 'Sofia', '71a');
+        this.officeAddress    = new Address('Tzarigradsko shose', 'Sofia', '88c');  // if: officeAddress == null, nqma da se izpulni tempaeita
+    }
+
+    var personViewModel = new PersonViewModel();
+    ko.applyBindings(personViewModel)
+
+
+</script>
+
+</body>
+</html>

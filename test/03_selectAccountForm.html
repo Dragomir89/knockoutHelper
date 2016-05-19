@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
+    <script src="../knockout-3.4.0.js"></script>
+
+    <style>
+        .showDetails{
+            display: none;
+        }
+    </style>
+
+</head>
+<body>
+
+
+<div class="wrapper">
+
+    <p>Total number of accounts: <span data-bind="text:accountsLength"></span></p>
+
+    <select id="selectAcc" data-bind="options: accounts, optionsText:'fullName', optionValue:'id'"></select>
+
+    <div class="accountDetails" data-bind="css:{showDetails:(showAccountDetails())}">
+        <p>Id       :<span data-bind="text: accounts()[selectedAccIndex()].id">      </span></p>
+        <p>Full name:<span data-bind="text: accounts()[selectedAccIndex()].fullName"></span></p>
+        <p>Balance  :<span data-bind="text: accounts()[selectedAccIndex()].balance"> </span></p>
+    </div>
+    <button data-bind="click: showAccountDetailsFn"><span data-bind="text:btnShowDetailsText"></span></button>
+    <hr>
+    <div class="newAccount">
+        <p>Id:        <input type="text" data-bind="value: id">        </p>
+        <p>First name:<input type="text" data-bind="value: firstName"> </p>
+        <p>Last name: <input type="text" data-bind="value: lastName">  </p>
+        <p>Balance:   <input type="text" data-bind="value: balance">   </p>
+        <button data-bind="click: function(data) {addNewAccount(id,firstName,lastName,balance)}">Add account</button>
+    </div>
+</div>
+
+
+
+
+<script>
+
+    function Account(id,firstName,lastName,balance){
+        this.id        = id;
+        this.firstName = firstName;
+        this.lastName  = lastName;
+        this.balance   = balance;
+        this.fullName  = this.firstName + ' ' + this.lastName;
+
+    }
+
+    $('#selectAcc').change(function(){
+
+        var selected = $('#selectAcc').children('option:selected').index();
+        ViewModel.selectedAccIndex(selected);
+
+    });
+
+
+    var ViewModel = new function(){
+        var _this = this;
+
+        var a1 = new Account(1,'Pesho', 'Petrov' , 1200);
+        var a2 = new Account(2,'Ivan' , 'Ivanov' , 3100);
+        var a3 = new Account(3,'Gosho', 'Goshev' , 220);
+        var a4 = new Account(4,'Stoqn', 'Stoqnov', 4600);
+
+        this.accounts           = ko.observableArray([a1,a2,a3,a4]);
+        this.accountsLength     = ko.observable(this.accounts().length);
+        this.selectedAccIndex   = ko.observable(0);
+        this.showAccountDetails = ko.observable(true);
+        this.btnShowDetailsText = ko.observable('Show detals');
+        this.showAccountDetailsFn = function(){
+
+            if(!_this.showAccountDetails()){
+                _this.btnShowDetailsText('Show details');
+            }else{
+                _this.btnShowDetailsText('Hide details');
+            }
+            _this.showAccountDetails(!_this.showAccountDetails())
+        };
+
+        this.id        = null;
+        this.firstName = null;
+        this.lastName  = null;
+        this.balance   = null;
+
+        this.addNewAccount = function(id,firstName,lastName,balance){
+
+            var acc = new Account(id,firstName,lastName,balance);
+
+            _this.accounts.push(acc);
+            this.accountsLength(_this.accounts().length);
+        }
+
+    };
+
+
+    ko.applyBindings(ViewModel);
+
+
+</script>
+
+
+</body>
+</html>

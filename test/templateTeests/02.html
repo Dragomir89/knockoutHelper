@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Table</title>
+    <script src="../../knockout-3.4.0.js"></script>
+    <style>
+        table {
+            border: 1px solid black;
+            margin: 0 auto;
+            font-size: 20px;
+        }
+        td {
+            width: 70px;
+            text-align: left;
+        }
+        
+
+    </style>
+</head>
+<body>
+
+<table data-bind="template:{name: templateName, foreach:accounts}"></table>
+
+
+
+<button data-bind="click: sortArrById">sort by id</button>
+<button data-bind="click: sortArrByBalance">sort by balance</button>
+
+<script type="text/html" id="acc_templ_high">
+    <tr style="color: #0000FF">
+        <td data-bind="text:id"></td>
+        <td data-bind="text:name"></td>
+        <td data-bind="text:balance"></td>
+    </tr>
+</script>
+
+<script type="text/html" id="acc_templ_low">
+    <tr style="color: red">
+        <td data-bind="text:id"></td>
+        <td data-bind="text:name"></td>
+        <td data-bind="text:balance"></td>
+        <td><button data-bind="click:selectAccount">select</button> </td>
+    </tr>
+</script>
+
+
+
+
+<script>
+
+    function Account(id,name,balance){
+        this.id      = id;
+        this.name    = name;
+        this.balance = balance;
+    }
+
+
+    var myAccountViewModel = {
+        accounts : ko.observableArray([
+            new Account(1, 'Ivan',   3000),
+            new Account(3, 'Georgi', 1700),
+            new Account(4, 'Stoqn',  4200),
+            new Account(8, 'Pesho',  2800)
+        ]),
+        templateName : function (account){
+            if(account.balance < 2900){
+                return 'acc_templ_low'
+            }else{
+                return 'acc_templ_high'
+            }
+        },
+        incrementingSortId : false,
+        incrementingSortBalance : false,
+        sortArrById : function(){
+            this.incrementingSortId = !this.incrementingSortId;
+            var _this = this;
+
+            this.accounts.sort(function(a, b){
+                if(_this.incrementingSortId){
+                    return b.id - a.id;
+                }else{
+                    return a.id - b.id;
+                }
+            });
+        },
+        sortArrByBalance : function(){
+            this.incrementingSortBalance = !this.incrementingSortBalance;
+            var _this = this;
+
+            this.accounts.sort(function(a, b){
+                if(_this.incrementingSortBalance){
+                    return b.balance - a.balance;
+                }else{
+                    return a.balance - b.balance;
+                }
+            });
+        }.apply,
+
+        selectedAccount : ko.observable(null),
+        selectAccount : function(account){
+            this.selectedAccount(account)
+        }
+
+
+    };
+
+
+    ko.applyBindings(myAccountViewModel);
+
+
+</script>
+
+
+</body>
+</html>

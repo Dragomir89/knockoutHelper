@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="../knockout-3.4.0.js"></script>
+    <style>
+
+        div{
+            border: 1px solid red;
+            padding: 5px;
+        }
+        button{
+            display: block;
+            margin: 5px;
+        }
+
+    </style>
+</head>
+<body>
+
+
+<ul data-bind="foreach: friends">
+    <li>
+        <span data-bind="text:name"></span>
+        <input type="checkbox" data-bind="checked : knowJS">
+        <input type="text" data-bind="value: favLibs, visible:knowJS">
+    </li>
+</ul>
+
+<button data-bind="click:addFriend">add friend</button>
+
+<div data-bind="visible:showForm">
+    <input type="text" data-bind="newFriendName">
+    <button data-bind="click : saveFriend">save friend</button>
+</div>
+
+
+
+
+<input type="text" data-bind="value:firstName, valueUpdate:'keyup'">
+<p>First Name: <span data-bind="text:firstName"></span></p>
+
+
+<script>
+
+    function Friend(name){
+        this.name = name;
+        this.knowJS = ko.observable(false);
+        this.favLibs = ko.observable('');
+    }
+
+    var countChanges = 0;
+    var obj = {
+        firstName    : ko.observable('My name'),
+        friends      : ko.observableArray([new Friend('Ivan'),new Friend('Gosho'),new Friend('Pesho')]),
+        addNewFriend : function(value){
+            this.friends().push(value);
+        },
+        showForm     : ko.observable(false),
+        newFriendName: ko.observable(''),
+        addFriend: function(){
+
+            console.log('click 1');
+            this.showForm(true);
+
+        },
+        saveFriend   : function(){
+            //obj.addNewFriend(this.newFriendName);
+            console.log('work is done !');
+            console.log(this.newFriendName());
+
+        }
+
+    };
+
+
+//    var formObj = {
+//        showForm: false,
+//        newFriendName: '',
+//        addFriend: function(){
+//            this.showForm = true;
+//        },
+//        saveFriend: function(){
+//            obj.addNewFriend(this.newFriendName);
+//            console.log('work is done !')
+//        }
+//    };
+
+
+    obj.firstName.subscribe(function(value){
+
+        countChanges++;
+        console.log('There is '+ countChanges + ' changes on this value');
+        console.log('last change is: ' + value);
+
+    });
+
+
+    ko.applyBindings(obj);
+    //ko.applyBindings(formObj);
+
+    // ko.observable("some value") --> sledi za promqna, no q pokazva kogato se natisne 'enter';
+
+    // .subscribe(function(some value){}) --> sledi za promeni na poleto za koeto e zaku4eno , na HTML-a moje da ase zaka4a
+    // event pri koito tova ne6to da se izpulnqva, tova stava s "valueUpdate: 'some event'";
+
+    // ko.observableArray(some array) --> moje da foreach-va elementite na masiv i razbira ako ima promeni po tqh
+
+    // visible --> zadava mu se booleva stoinost, kqto pokazva, dali ne6to e vidimo ili ne.
+</script>
+
+</body>
+</html>

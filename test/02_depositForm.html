@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+    <style>
+        .wrapper{
+            padding: 5px;
+            margin: 0 auto;
+            border: 1px solid #00b3ee;
+            max-width: 350px;
+        }
+
+        td{
+            text-decoration: underline;
+            text-align: center;
+            width: 75px;
+            padding: 5px;
+        }
+        .selected{
+            color: red;
+        }
+        tbody tr{
+            cursor: pointer;
+        }
+        .formElement{
+            margin-bottom: 5px;
+        }
+        label{
+            display: inline-block;
+            width: 60px;
+
+        }
+    </style>
+
+
+    <script src="../knockout-3.4.0.js"></script>
+</head>
+<body>
+
+<div class = 'wrapper'>
+    <table>
+        <thead>
+        <tr>
+            <th>Id</th>
+            <th>Name</th>
+            <th>Balance</th>
+        </tr>
+        </thead>
+        <tbody data-bind="foreach: {data:accounts,as:'account'}">
+        <tr data-bind="click: $parent.selectAccount ,css:{selected: (account.id == ($parent.selectedAccount() == null ? -1 : $parent.selectedAccount().id))}">
+            <td><i data-bind="text:account.id"></i></td>
+            <td data-bind="text:account.name">     </td>
+            <td data-bind="text:account.balance">  </td>
+            <td><button data-bind="click: $parent.selectAccount, clickBubble: false">Select</button></td>
+            <!-- "clickBubble: false" спира bubbling-a -->
+            <td><button data-bind="click: $parent.deleteAccount, clickBubble: false">Delete</button></td>
+        </tr>
+        </tbody>
+    </table>
+    <input type="text" data-bind="value: amountToDeposit">
+    <button data-bind="click: addDeposit">Deposit</button>
+    <button data-bind="click: function(data) {withdraw(500)}">Withdraw</button>
+    <!-- това е синтаксиса когато искаме да дадем дефолтен параметур на функция от HTML-a-->
+    <div>
+        <h2>Add new user</h2>
+        <form>
+            <div class="formElement">
+                <label>Name</label>
+                <input type="text"
+                       data-bind="value: name">
+            </div>
+            <div class="formElement">
+                <label>Balance:</label>
+                <input type="number"
+                       data-bind="value: balance">
+            </div>
+            <div>
+                <button data-bind="click: function(data) {addNewUser(name, balance)}">Add new user</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+<script>
+
+function Account(id,name,balance,deposits){
+    this.id   = id;
+    this.name = name;
+    this.balance  = ko.observable(balance);
+    this.deposits = deposits;
+}
+
+var myAccountViewModel = new function(){
+    var _this = this;
+
+    this.accounts = ko.observableArray([
+        new Account(1,'Ivan'  ,4600 ),
+        new Account(2,'Pesho' ,5500 ),
+        new Account(3,'Gosho' ,12400),
+        new Account(4,'Stamat',2300 ),
+        new Account(5,'Rusi'  ,10350)
+    ]);
+    this.count = ko.computed(function(){
+        return _this.accounts().length;
+    });
+
+
+    this.selectedAccount = ko.observable(null); // tova se izpolzva pri smqnata na klasa na tr-to
+
+    this.selectAccount = function(accout){
+        console.log(accout);         // tuk this e obekta account za tova se nalaga da izpolzvame _this
+        _this.selectedAccount(accout);
+    };
+
+    this.amountToDeposit = ko.observable(0);
+
+    this.addDeposit = function(){
+        // na vsqkude kudeto imam " ko.observable(something) " posle go izpolzvam sus skobi !!!!!!!
+        //console.log(this.selectedAccount());
+        if(!this.selectedAccount()){
+            console.log('not selected account');
+            return;
+        }
+        //console.log(this.selectedAccount().balance());
+        //console.log(Number(this.amountToDeposit()));
+        this.selectedAccount().balance(Number(this.selectedAccount().balance()) + Number(this.amountToDeposit()));
+        // na vsqkude kudeto imam " ko.observable(something) " posle go izpolzvam sus skobi !!!!!!!
+    };
+
+    this.withdraw = function(maxValue){
+        console.log(maxValue);
+
+        if(Number(this.amountToDeposit()) > maxValue){
+            alert('You can withdraw max 500');
+            return;
+        }
+
+        if(Number(this.selectedAccount().balance()) - Number(this.amountToDeposit()) < 0){
+            alert('invalid operation');
+            alert('not enough money in your balance');
+            return;
+        }
+
+        this.selectedAccount().balance(Number(this.selectedAccount().balance()) - Number(this.amountToDeposit()));
+    };
+
+    this.deleteAccount = function(account){
+
+        var index = _this.accounts().indexOf(account);
+
+        _this.accounts.splice(index, 1);
+
+    };
+
+
+    this.name    = ko.observable();
+    this.balance = ko.observable();
+
+    this.addNewUser = function(name, balance){
+
+        console.log(name(), balance());
+        var currentId = _this.accounts().length + 1;
+
+        var account = new Account(currentId, name(), balance());
+
+        _this.accounts.push(account);
+
+
+    }
+
+
+};
+
+ko.applyBindings(myAccountViewModel);
+
+
+
+
+
+
+</script>
+
+</body>
+</html>
+
+
+
+
+
+
+
+

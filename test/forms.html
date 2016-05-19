@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous">
+
+    <script src="../knockout-3.4.0.js"></script>
+</head>
+<body>
+
+
+<div class="headerPart">
+
+    <label>Type form:</label>
+    <select id="firstSelect" data-bind="options: shapeTypes, value: someName">
+
+    <label>Form:</label>
+    </select>
+
+    <select id="secondSelect" data-bind="options: figures">
+
+    </select>
+
+</div>
+
+<div class="mainContent" data-bind="visible: hideContent">
+    <h1>This is mai content </h1>
+
+    <select id="thirdSelect" data-bind="options: calculations">
+
+    </select>
+</div>
+
+
+
+
+<script type="text/javascript">
+    var viewModel = new function (){
+        var self = this;
+        var formTypes = ['select figures', '2D', '3D'];
+        var forms2D = ['-','triangle', 'rectangle', 'square'];
+        var forms3D = ['-','piramid', 'cube', 'cylinder'];
+        var calculations2D = ['area', 'perimeter'];
+        var calculations3D = ['perimeter','volume','surface'];
+
+        this.shapeTypes = ko.observableArray(formTypes);
+        this.figures = ko.observableArray();
+        this.calculations = ko.observableArray();
+        this.someName = ko.observable();
+        this.hideContent = ko.observable(false);
+
+
+        this.someName.subscribe(function(newValue){
+            if(newValue === '2D'){
+                self.figures(forms2D);
+                self.calculations(calculations2D);
+                self.hideContent(true);
+            }else if(newValue === '3D'){
+                self.figures(forms3D);
+                self.calculations(calculations2D);
+                self.hideContent(true);
+            }else {
+                self.figures([]);
+                self.calculations([]);
+                self.hideContent(false);
+            }
+        })
+
+
+
+
+
+
+    };
+
+    ko.applyBindings(viewModel);
+
+
+</script>
+
+</body>
+</html>
+
+
+
+
+
+
+
+

@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+    <script src="../../knockout-3.4.0.js"></script>
+
+    <style>
+
+        .Page1{
+            background: red;
+            width: 200px;
+            height: 200px;
+        }
+        .Page2{
+            background: blue;
+            width: 200px;
+            height: 200px;
+
+        }
+        .Page3{
+            background: greenyellow;
+            width: 200px;
+            height: 200px;
+        }
+
+    </style>
+
+
+</head>
+<body>
+
+
+<div data-bind="visible: Page() == 'Page1', template: {name: 'tempPage1'}"></div>
+<div data-bind="visible: Page() == 'Page2', template: {name: 'tempPage2'}"></div>
+<div data-bind="visible: Page() == 'Page3', template: {name: 'tempPage3'}"></div>
+
+
+<script type="text/html" Id="tempPage1">
+
+<div class="Page1">
+    this is Page1
+    <div>
+        <strong>whit every click we change display value  </strong>
+    </div>
+    <button data-bind="click: goToPage2">Go to page 2</button>
+</div>
+
+</script>
+
+
+<script type="text/html" Id="tempPage2">
+
+    <div class="Page2">
+        this is Page2
+        <button data-bind="click: goToPage3">Go to page 3</button>
+    </div>
+
+</script>
+
+
+<script type="text/html" Id="tempPage3">
+
+    <div class="Page3">
+        this is Page3
+        <button data-bind="click: goToPage1">Go to page 1</button>
+    </div>
+
+</script>
+
+
+<script>
+    var vm = function(defaultPage){
+        this.Page = ko.observable(defaultPage);
+
+        this.goToPage1 = function(){
+            this.Page('Page1');
+        };
+
+        this.goToPage2 = function(){
+            this.Page('Page2');
+        };
+
+        this.goToPage3 = function(){
+            this.Page('Page3');
+        }
+
+    };
+
+    ko.applyBindings(new vm("Page1"))
+
+</script>
+
+
+
+
+
+
+</body>
+</html>
